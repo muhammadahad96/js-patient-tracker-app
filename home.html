@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Patient Tracker - Home</title>
+    <link rel="icon" href="img/favicon.png" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <script src="https://www.gstatic.com/firebasejs/5.8.1/firebase.js"></script>
+    <script src="js/config.js"></script>
+
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+      integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body>
+    <header>
+      <div class="titleBar text-center">
+        <h2>Patient Tracker</h2>
+      </div>
+    </header>
+
+    <section>
+      <div class="container-fluid banner">
+        <div class="container patientForm pull-left">
+          <form class="data" action="javascript:void(0)">
+            <h3>Register Patient</h3>
+
+            <div class="form-group">
+              <input type="text" id="txt_id" class="form-control hidden" />
+            </div>
+
+            <div class="form-group">
+              Patient Name
+              <input
+                type="text"
+                id="txt_name"
+                class="form-control"
+                placeholder="Patient Name"
+              />
+            </div>
+
+            <div class="form-group">
+              Disease
+              <input
+                type="text"
+                id="txt_disease"
+                class="form-control"
+                placeholder="Disease"
+              />
+            </div>
+
+            <div class="form-group">
+              Medication
+              <input
+                type="text"
+                id="txt_medic"
+                class="form-control"
+                placeholder="Medication"
+              />
+            </div>
+
+            <div class="form-group">
+              Treatment Cost
+              <input
+                type="text"
+                id="txt_cost"
+                class="form-control"
+                placeholder="Treatment Cost"
+              />
+            </div>
+
+            <div class="form-group">
+              Appointment Date
+              <input type="date" id="txt_date" class="form-control" />
+            </div>
+
+            <div class="form-group">
+              <br />
+              <button
+                type="submit"
+                onclick="addPatient()"
+                class="form-control btn btn-primary"
+              >
+                Register
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container searchDiv">
+        <div class="col-lg-3 col-md-3 col-sm-12"></div>
+
+        <div class="col-lg-3 col-md-3 col-sm-12">
+          <div class="form-group">
+            <input
+              type="text"
+              name="search"
+              id="searchName"
+              placeholder="Search By Name"
+              class="form-control"
+            />
+            <br />
+            <button
+              type="submit"
+              onclick="searchName()"
+              class="btn btn-success form-control"
+            >
+              <i class="fa fa-search"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-12">
+          <div class="form-group">
+            <input
+              type="date"
+              name="search"
+              id="searchDate"
+              placeholder="Search By Date"
+              class="form-control"
+            />
+            <br />
+            <button
+              type="submit"
+              onclick="searchDate()"
+              class="btn btn-success form-control"
+            >
+              <i class="fa fa-search"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-12"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container tbl_patient">
+        <div class="table-responsive">
+          <table
+            id="tbl_patients"
+            class="table table-bordered table-striped table-responsive table-hover"
+          >
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Disease</th>
+                <th>Medication</th>
+                <th>Treatment Cost</th>
+                <th>Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- UPDATE MODAL -->
+    <div class="modal fade" id="myModal" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal Content -->
+        <div class="modal-content">
+          <div class="modal-header" style="padding: 15px 50px;">
+            <h4 class="text-center">Update Patient Record</h4>
+          </div>
+
+          <div class="modal-body">
+            <form role="form">
+              <div class="form-group">
+                <label for="update_id"
+                  ><span class="glyphicon glyphicon-user"></span> ID</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="update_id"
+                  readonly
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="update_name"
+                  ><span class="glyphicon glyphicon-user"></span> Name</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="update_name"
+                  placeholder="Name"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="update_disease"
+                  ><span class="glyphicon glyphicon-user"></span> Disease</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="update_disease"
+                  placeholder="Disease"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="update_medication"
+                  ><span class="glyphicon glyphicon-user"></span>
+                  Medication</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="update_medication"
+                  placeholder="Medication"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="update_cost"
+                  ><span class="glyphicon glyphicon-user"></span> Treatment
+                  Cost</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="update_cost"
+                  placeholder="Treatment Cost"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="update_date"
+                  ><span class="glyphicon glyphicon-user"></span> Appointment
+                  Date</label
+                >
+                <input type="date" class="form-control" id="update_date" />
+              </div>
+
+              <button
+                type="submit"
+                class="btn btn-primary btn-block"
+                onclick="updatePatient()"
+              >
+                <span class="glyphicon glyphicon"></span> Update
+              </button>
+            </form>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-danger btn-default pull-left"
+              data-dismiss="modal"
+            >
+              <span class="glyphicon glyphicon-remove"></span> Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container-fluid">
+        <div class="container text-center">
+          <h4>Developed By Muhammad Ahad</h4>
+        </div>
+      </div>
+    </footer>
+  </body>
+
+  <script>
+    // database reference
+    var firebaseRef = firebase.database();
+
+    // insert into patients node using push which generates a unique key
+    function addPatient() {
+      // store the key in a variable to use later
+      var pid = firebaseRef.ref().child('patients').push().key;
+      var p_name = document.getElementById('txt_name').value;
+      var p_disease = document.getElementById('txt_disease').value;
+      var p_medic = document.getElementById('txt_medic').value;
+      var p_cost = document.getElementById('txt_cost').value;
+      var p_date = document.getElementById('txt_date').value;
+
+      var data = {
+        // the key/value pairs to be stored
+        patient_id: pid,
+        patient_name: p_name,
+        patient_disease: p_disease,
+        patient_medic: p_medic,
+        patient_cost: p_cost,
+        patient_date: p_date,
+      };
+
+      if (
+        data.patient_name == '' ||
+        data.patient_disease == '' ||
+        data.patient_medic == '' ||
+        data.patient_cost == '' ||
+        data.patient_date == ''
+      ) {
+        alert('Please Fill all Fields');
+      } else {
+        var updates = {};
+        // store the patient data inside the pid array of patients node
+        updates['/patients/' + pid] = data;
+        firebaseRef.ref().update(updates, function (error) {
+          if (error) {
+            // insert failed
+            alert('Record Not Inserted');
+            document.getElementById('txt_name').value = '';
+            document.getElementById('txt_disease').value = '';
+            document.getElementById('txt_medic').value = '';
+            document.getElementById('txt_cost').value = '';
+            document.getElementById('txt_date').value = '';
+          } else {
+            // insert success
+            alert('Record Inserted');
+            document.getElementById('txt_name').value = '';
+            document.getElementById('txt_disease').value = '';
+            document.getElementById('txt_medic').value = '';
+            document.getElementById('txt_cost').value = '';
+            document.getElementById('txt_date').value = '';
+          }
+        });
+      }
+    }
+
+    // using on method that fetches data in realtime
+    function fetchData() {
+      var tableRef = document.getElementById('tbl_patients');
+
+      firebaseRef.ref('patients').on('value', (snap) => {
+        // val() is a snapshot method
+        var result = snap.val();
+
+        // check if some data exists
+        if (result) {
+          // store patients data in a variable as an object
+          var patientsData = Object.values(result);
+
+          tableRef.innerHTML = `
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Disease</th>
+                    <th>Medication</th>
+                    <th>Treatment Cost</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            `;
+
+          // iterate the data values
+          patientsData.forEach((patientsObj) => {
+            tableRef.innerHTML += `
+            <tr>
+                <td> ${patientsObj.patient_id} </td>
+                <td> ${patientsObj.patient_name} </td>
+                <td> ${patientsObj.patient_disease} </td>
+                <td> ${patientsObj.patient_medic} </td>
+                <td> ${patientsObj.patient_cost} </td>
+                <td> ${patientsObj.patient_date} </td>
+                <td> <button id="btn_edit" data-toggle="modal" data-target="#myModal" onclick='editData(this)' class="btn btn-block btn-warning">Edit</button>
+                <button onclick='delData(this)' class="btn btn-block btn-danger">Delete</button></td>
+            </tr>
+            `;
+          });
+        }
+      });
+    }
+
+    window.onload = fetchData();
+
+    // UPDATE DATA
+    function editData(row) {
+      // traverse the dom to find row and then its td collection
+      let tRow = row.parentElement.parentElement.getElementsByTagName('td');
+
+      // send table row's data to modal form fields
+      document.getElementById('update_id').value = tRow[0].innerText;
+      document.getElementById('update_name').value = tRow[1].innerText;
+      document.getElementById('update_disease').value = tRow[2].innerText;
+      document.getElementById('update_medication').value = tRow[3].innerText;
+      document.getElementById('update_cost').value = tRow[4].innerText;
+      document.getElementById('update_date').value = tRow[5].innerText;
+    }
+
+    function updatePatient() {
+      // obtain data from form fields
+      var p_id = document.getElementById('update_id').value;
+      var p_name = document.getElementById('update_name').value;
+      var p_disease = document.getElementById('update_disease').value;
+      var p_medic = document.getElementById('update_medication').value;
+      var p_cost = document.getElementById('update_cost').value;
+      var p_date = document.getElementById('update_date').value;
+
+      var data = {
+        patient_id: p_id,
+        patient_name: p_name,
+        patient_disease: p_disease,
+        patient_medic: p_medic,
+        patient_cost: p_cost,
+        patient_date: p_date,
+      };
+
+      // flag variable
+      var check = true;
+
+      if (
+        data.patient_name == '' ||
+        data.patient_disease == '' ||
+        data.patient_medic == '' ||
+        data.patient_cost == '' ||
+        data.patient_date == ''
+      ) {
+        alert('Please Fill all Fields');
+      } else {
+        var updates = {};
+        updates['/patients/' + p_id] = data;
+        firebaseRef.ref().update(updates, function (error) {
+          if (error) {
+            // update failed
+            check = true;
+            document.getElementById('update_name').value = '';
+            document.getElementById('update_disease').value = '';
+            document.getElementById('update_medic').value = '';
+            document.getElementById('update_cost').value = '';
+            document.getElementById('update_date').value = '';
+          } else {
+            // update success
+            document.getElementById('update_name').value = '';
+            document.getElementById('update_disease').value = '';
+            document.getElementById('update_medic').value = '';
+            document.getElementById('update_cost').value = '';
+            document.getElementById('update_date').value = '';
+          }
+        });
+      }
+
+      if (check === true) {
+        alert('Update Successful');
+      } else {
+        alert('Update Failed');
+      }
+    }
+
+    // DELETE DATA
+    function delData(row) {
+      var tRow = row.parentElement.parentElement.getElementsByTagName('td');
+      var pid = tRow[0].innerText;
+      firebaseRef
+        .ref()
+        .child('/patients/' + pid)
+        .remove();
+      alert('Patient Record Deleted');
+    }
+
+    // SEARCH METHODS
+    function searchName() {
+      var query = document.getElementById('searchName').value;
+      var tableUsers = document.getElementById('tbl_patients');
+
+      firebaseRef
+        .ref()
+        .child('patients')
+        .orderByChild('patient_name')
+        .equalTo(query)
+        .on('value', (snap) => {
+          var result = snap.val();
+
+          // check if user found
+          if (result) {
+            var patientData = Object.values(result);
+
+            tableUsers.innerHTML = `
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Disease</th>
+                    <th>Medication</th>
+                    <th>Treatment Cost</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            `;
+
+            // iterate the data values
+            patientData.forEach((patientObj) => {
+              tableUsers.innerHTML += `
+                <tr>
+                    <td> ${patientObj.patient_id} </td>
+                    <td> ${patientObj.patient_name} </td>
+                    <td> ${patientObj.patient_disease} </td>
+                    <td> ${patientObj.patient_medic} </td>
+                    <td> ${patientObj.patient_cost} </td>
+                    <td> ${patientObj.patient_date} </td>
+                    <td> <button id="btn_edit" data-toggle="modal" data-target="#myModal" onclick='editData(this)' class="btn btn-block btn-warning">Edit</button>
+                    <button onclick='delData(this)' class="btn btn-block btn-danger">Delete</button></td>                    
+                </tr>
+                `;
+            });
+          } else {
+            // alert when no user found
+            alert('No Record Found');
+          }
+        });
+    }
+
+    function searchDate() {
+      var query = document.getElementById('searchDate').value;
+      var tableUsers = document.getElementById('tbl_patients');
+
+      firebaseRef
+        .ref()
+        .child('patients')
+        .orderByChild('patient_date')
+        .equalTo(query)
+        .on('value', (snap) => {
+          var result = snap.val();
+
+          // check if patient found
+          if (result) {
+            var patientData = Object.values(result);
+
+            tableUsers.innerHTML = `
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Disease</th>
+                    <th>Medication</th>
+                    <th>Treatment Cost</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            `;
+
+            // iterate the data values
+            patientData.forEach((patientObj) => {
+              tableUsers.innerHTML += `
+                <tr>
+                    <td> ${patientObj.patient_id} </td>
+                    <td> ${patientObj.patient_name} </td>
+                    <td> ${patientObj.patient_disease} </td>
+                    <td> ${patientObj.patient_medic} </td>
+                    <td> ${patientObj.patient_cost} </td>
+                    <td> ${patientObj.patient_date} </td>
+                    <td> <button id="btn_edit" data-toggle="modal" data-target="#myModal" onclick='editData(this)' class="btn btn-block btn-warning">Edit</button>
+                    <button onclick='delData(this)' class="btn btn-block btn-danger">Delete</button></td>                       
+                </tr>
+                `;
+            });
+          } else {
+            // alert when no user found
+            alert('No Record Found');
+          }
+        });
+    }
+  </script>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Patient Tracker - Login</title>
+    <link rel="icon" href="img/favicon.png" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <script src="https://www.gstatic.com/firebasejs/5.8.1/firebase.js"></script>
+    <script src="js/config.js"></script>
+
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+      integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body>
+    <header>
+      <div class="titleBar text-center">
+        <h2>Patient Tracker</h2>
+      </div>
+    </header>
+
+    <section>
+      <div class="container-fluid banner" style="min-height: 685px;">
+        <div class="container loginForm pull-left">
+          <form class="data" action="javascript:void(0)">
+            <h3>Login</h3>
+
+            <div class="form-group">
+              Email
+              <input
+                type="text"
+                id="txt_email"
+                class="form-control"
+                placeholder="Email"
+                value="muhammadahad9615@gmail.com"
+              />
+            </div>
+
+            <div class="form-group">
+              Password
+              <input
+                type="password"
+                id="txt_pwd"
+                class="form-control"
+                placeholder="Password"
+                value="ahad123"
+              />
+            </div>
+
+            <div class="form-group">
+              <br />
+              <button
+                id="btn_login"
+                type="submit"
+                class="form-control btn btn-primary"
+              >
+                Login
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container-fluid">
+        <div class="container text-center">
+          <h4>Developed By Muhammad Ahad</h4>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // LOGIN
+      // Get Auth Data
+      const txt_email = document.getElementById('txt_email');
+      const txt_pwd = document.getElementById('txt_pwd');
+      const btn_login = document.getElementById('btn_login');
+
+      btn_login.addEventListener('click', (e) => {
+        const email = txt_email.value;
+        const pwd = txt_pwd.value;
+
+        firebase
+          .auth()
+          .signInWithEmailAndPassword(email, pwd)
+          .then((res) => {
+            alert('Login Successful');
+            window.location.href = 'home.html';
+          })
+          .catch(function (error) {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            alert(`Error Code: ${errorCode} \nError Message: ${errorMessage}`);
+          });
+      });
+    </script>
+  </body>
+</html>

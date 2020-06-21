@@ -1,0 +1,86 @@
+@import url(
+  https://fonts.googleapis.com/css?family=Roboto:400,
+  300,
+  600,
+  400italic
+);
+
+/* GLOBAL */
+body {
+  font-family: 'Roboto', Helvetica, Arial, sans-serif;
+}
+
+/* HEADER */
+.titleBar {
+  padding-top: 5px;
+  padding-bottom: 10px;
+  margin-bottom: 0px;
+  background: #030303;
+  color: #f9f9f9;
+}
+
+/* BANNER */
+.banner {
+  background-image: url(../img/cover.jpg);
+  background-position: center;
+  background-attachment: scroll;
+  background-size: cover;
+}
+
+/* PATIENT FORM */
+.loginForm,
+.patientForm {
+  max-width: 400px;
+  width: 100%;
+  position: relative;
+}
+
+.data input[type='text'],
+.data input[type='date'],
+.data button[type='submit'] {
+  font: 400 14px/16px 'Roboto', Helvetica, Arial, sans-serif;
+}
+
+.data {
+  background: #f9f9f9;
+  padding: 25px;
+  margin: 100px 10px;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+.data h3 {
+  display: block;
+  font-family: 'Roboto';
+  font-size: 30px;
+  font-weight: 300;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+}
+
+/* SEARCH */
+.searchDiv {
+  margin-top: 80px;
+}
+
+.searchDiv input[type='text'],
+.searchDiv input[type='date'],
+.searchDiv button[type='submit'] {
+  font: 400 14px/19px 'Roboto', Helvetica, Arial, sans-serif;
+  padding-left: 8px;
+}
+
+/* TABLE */
+.tbl_patient {
+  margin-top: 40px;
+  margin-bottom: 130px;
+}
+
+/* FOOTER */
+footer {
+  background: #030303;
+  font-family: 'Roboto';
+  font-size: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  color: #f9f9f9;
+}
